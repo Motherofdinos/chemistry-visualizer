@@ -154,9 +154,46 @@ function setupUI() {
     if (saved && THEMES[saved]) applyTheme(saved);
 }
 
+const ATOM_NAMES = {
+    H:  'Гідроген',
+    O:  'Оксиген',
+    C:  'Карбон',
+    N:  'Нітроген',
+    Na: 'Натрій',
+    Mg: 'Магній',
+};
+
 function updateReactionInfo() {
     document.getElementById('reaction-title').textContent = selectedReaction.title;
     document.getElementById('reaction-equation').textContent = selectedReaction.equation;
+    updateLegend();
+}
+
+function updateLegend() {
+    // Collect unique atom types from all molecules in this reaction
+    const allSubstances = [...selectedReaction.reactants, ...selectedReaction.products];
+    const types = new Set();
+    allSubstances.forEach(sub => {
+        const mol = MOLECULES[sub.formula];
+        if (mol) mol.atoms.forEach(a => types.add(a.type));
+    });
+
+    const legend = document.getElementById('atom-legend');
+    const items = document.getElementById('legend-items');
+    items.innerHTML = '';
+
+    types.forEach(type => {
+        const info = ATOMS[type];
+        if (!info) return;
+        // Convert numeric hex color to CSS string
+        const hex = '#' + info.color.toString(16).padStart(6, '0');
+        const item = document.createElement('div');
+        item.className = 'legend-item';
+        item.innerHTML = `<span class="legend-dot" style="background:${hex}"></span>${type} — ${ATOM_NAMES[type] ?? type}`;
+        items.appendChild(item);
+    });
+
+    legend.style.display = 'block';
 }
 
 // ─── 3D Molecules ────────────────────────────────────────────────────────────

@@ -156,6 +156,46 @@ select:disabled {
     border: 1px solid var(--border-color);
 }
 
+/* ===== Atom Legend ===== */
+.atom-legend {
+    padding: 10px 12px;
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    margin-top: 0.8rem;
+}
+
+.legend-title {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--stats-label-color);
+    display: block;
+    margin-bottom: 8px;
+}
+
+.legend-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--text-color);
+}
+
+.legend-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.15);
+}
+
 /* ===== Theme Switcher ===== */
 .theme-switcher {
     display: flex;
