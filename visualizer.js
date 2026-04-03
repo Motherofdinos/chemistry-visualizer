@@ -231,14 +231,19 @@ function createMolecule(formula) {
         const dir = new THREE.Vector3().subVectors(end, start);
         const len = dir.length();
 
+        // Single bond: thick, gray. Double: thinner + farther apart, yellow tint. Triple: even thinner + blue tint.
+        const radius     = count === 1 ? 0.12 : count === 2 ? 0.07 : 0.06;
+        const offsetStep = count === 2 ? 0.35 : 0.28;
+        const color      = count === 1 ? 0xcccccc : count === 2 ? 0xdddd99 : 0x99ccff;
+
         for (let i = 0; i < count; i++) {
             const cyl = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.1, 0.1, len, 8),
-                new THREE.MeshPhongMaterial({ color: 0xcccccc })
+                new THREE.CylinderGeometry(radius, radius, len, 8),
+                new THREE.MeshPhongMaterial({ color })
             );
-            const offset = (i - (count - 1) / 2) * 0.2;
             cyl.position.addVectors(start, end).multiplyScalar(0.5);
             if (count > 1) {
+                const offset = (i - (count - 1) / 2) * offsetStep;
                 const perp = new THREE.Vector3(0, 1, 0).cross(dir).normalize().multiplyScalar(offset);
                 if (perp.length() === 0) perp.set(1, 0, 0).multiplyScalar(offset);
                 cyl.position.add(perp);
