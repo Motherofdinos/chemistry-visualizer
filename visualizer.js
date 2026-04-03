@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { TOPICS, MOLECULES, ATOMS } from './reactions.js';
+import { TOPICS, MOLECULES, ATOMS, MOLECULE_INFO } from './reactions.js';
 import { THEMES } from './themes.js';
 import { animateAtoms } from './animator.js';
 
@@ -40,6 +40,7 @@ function init() {
 
     window.addEventListener('resize', onWindowResize);
     setupUI();
+    setupRaycasting();
     loop();
 }
 
@@ -122,6 +123,7 @@ function setupUI() {
         updateReactionInfo();
         renderMolecules('reactants');
         currentView = 'reactants';
+        hidePopup();
         // Show animate button and speed slider only if mapping exists
         const hasAnim = !!selectedReaction.atomMapping;
         animBtn.style.display = hasAnim ? 'block' : 'none';
@@ -208,6 +210,7 @@ function createMolecule(formula) {
     if (!data) return new THREE.Group();
 
     const group = new THREE.Group();
+    group.userData.formula = formula;
 
     const atomMeshes = data.atoms.map(atomData => {
         const info = ATOMS[atomData.type];
@@ -216,6 +219,7 @@ function createMolecule(formula) {
             new THREE.MeshPhongMaterial({ color: getAtomColor(atomData.type), shininess: 100 })
         );
         mesh.position.set(...atomData.pos);
+        mesh.userData.formula = formula; // tag for raycasting
         group.add(mesh);
         return mesh;
     });
@@ -284,6 +288,65 @@ function fitCamera() {
     const center = box.getCenter(new THREE.Vector3());
     controls.target.copy(center);
     camera.position.z = Math.max(size.x, size.y) * 1.5 + 5;
+}
+
+// ─── Molecule Popup ───────────────────────────────────────────────────────────
+
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+function setupRaycasting() {
+    renderer.domElement.addEventListener('click', (e) => {
+        if (isAnimating) return;
+
+        const rect = renderer.domElement.getBoundingClientRect();
+        mouse.x =  ((e.clientX - rect.left)  / rect.width)  * 2 - 1;
+        mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+
+        // Collect all atom meshes (tagged with userData.formula)
+        const targets = [];
+        currentMolecules.traverse(obj => {
+            if (obj.isMesh && obj.userData.formula) targets.push(obj);
+        });
+
+        const hits = raycaster.intersectObjects(targets);
+        if (hits.length > 0) {
+            showPopup(hits[0].object.userData.formula, e.clientX, e.clientY);
+        } else {
+            hidePopup();
+        }
+    });
+
+    document.getElementById('popup-close').addEventListener('click', hidePopup);
+}
+
+function showPopup(formula, clientX, clientY) {
+    const info = MOLECULE_INFO[formula];
+    if (!info) return;
+
+    document.getElementById('popup-name').textContent = info.name;
+    document.getElementById('popup-formula').textContent = formula;
+    document.getElementById('popup-mass').textContent = `Молярна маса: ${info.molarMass} г/моль`;
+
+    const popup = document.getElementById('mol-popup');
+    popup.style.display = 'block';
+
+    // Position near click, keep inside canvas
+    const container = document.getElementById('canvas-container');
+    const rect = container.getBoundingClientRect();
+    let x = clientX - rect.left + 12;
+    let y = clientY - rect.top + 12;
+    if (x + 180 > rect.width)  x = clientX - rect.left - 180;
+    if (y + 100 > rect.height) y = clientY - rect.top  - 100;
+
+    popup.style.left = x + 'px';
+    popup.style.top  = y + 'px';
+}
+
+function hidePopup() {
+    document.getElementById('mol-popup').style.display = 'none';
 }
 
 // ─── Animation ───────────────────────────────────────────────────────────────

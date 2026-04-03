@@ -132,6 +132,22 @@ export const TOPICS = [
     }
 ];
 
+export const MOLECULE_INFO = {
+    'H2':     { name: 'Водень',              molarMass: 2.02  },
+    'O2':     { name: 'Кисень',              molarMass: 32.00 },
+    'H2O':    { name: 'Вода',                molarMass: 18.02 },
+    'C':      { name: 'Вуглець',             molarMass: 12.01 },
+    'CO2':    { name: 'Вуглекислий газ',     molarMass: 44.01 },
+    'CH4':    { name: 'Метан',               molarMass: 16.04 },
+    'C2H5OH': { name: 'Етанол',              molarMass: 46.07 },
+    'N2':     { name: 'Азот',                molarMass: 28.02 },
+    'NH3':    { name: 'Аміак',               molarMass: 17.03 },
+    'Na':     { name: 'Натрій',              molarMass: 22.99 },
+    'NaOH':   { name: 'Гідроксид натрію',    molarMass: 40.00 },
+    'Mg':     { name: 'Магній',              molarMass: 24.31 },
+    'MgO':    { name: 'Оксид магнію',        molarMass: 40.30 },
+};
+
 export const MOLECULES = {
     'H2': {
         atoms: [
