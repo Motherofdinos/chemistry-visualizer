@@ -266,8 +266,8 @@ function clearMolecules() {
 function getMoleculeOffset(substances, subIdx, instanceIdx) {
     const xBase = -(substances.length * 4) / 2;
     return {
-        x: xBase + instanceIdx * 3,
-        y: (subIdx - (substances.length - 1) / 2) * 3,
+        x: xBase + instanceIdx * 4,
+        y: (subIdx - (substances.length - 1) / 2) * 3.5,
     };
 }
 

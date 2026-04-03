@@ -260,19 +260,21 @@ export const MOLECULES = {
         bonds: [[0,1],[1,2],[2,3],[0,4],[0,5],[0,6],[1,7],[1,8]]
     },
     'C3H8': {
-        // Propane zigzag: C1-C2-C3
+        // Propane with correct geometry:
+        // C-C-C angle ~112°, tetrahedral H positions (~109.5° H-C-C angles)
+        // C2 at origin, C1/C3 symmetric at 56° from vertical
         atoms: [
-            { type: 'C', pos: [-1.54, 0,    0] },   // C1 — index 0
-            { type: 'C', pos: [ 0,    0,    0] },   // C2 — index 1
-            { type: 'C', pos: [ 1.54, 0,    0] },   // C3 — index 2
-            { type: 'H', pos: [-2.1,  0.9,  0.5] }, // H on C1 — 3
-            { type: 'H', pos: [-2.1,  0.9, -0.5] }, // H on C1 — 4
-            { type: 'H', pos: [-2.1, -0.9,  0] },   // H on C1 — 5
-            { type: 'H', pos: [ 0,    1.0,  0.8] }, // H on C2 — 6
-            { type: 'H', pos: [ 0,    1.0, -0.8] }, // H on C2 — 7
-            { type: 'H', pos: [ 2.1,  0.9,  0.5] }, // H on C3 — 8
-            { type: 'H', pos: [ 2.1,  0.9, -0.5] }, // H on C3 — 9
-            { type: 'H', pos: [ 2.1, -0.9,  0] },   // H on C3 — 10
+            { type: 'C', pos: [-1.28,  0.86,  0] },    // C1 — 0
+            { type: 'C', pos: [ 0,     0,     0] },    // C2 — 1
+            { type: 'C', pos: [ 1.28,  0.86,  0] },    // C3 — 2
+            { type: 'H', pos: [-1.01,  1.92,  0] },    // H on C1 — 3
+            { type: 'H', pos: [-1.87,  0.64,  0.89] }, // H on C1 — 4
+            { type: 'H', pos: [-1.87,  0.64, -0.89] }, // H on C1 — 5
+            { type: 'H', pos: [ 0,    -0.65,  0.88] }, // H on C2 — 6
+            { type: 'H', pos: [ 0,    -0.65, -0.88] }, // H on C2 — 7
+            { type: 'H', pos: [ 1.27,  0.23,  0.89] }, // H on C3 — 8
+            { type: 'H', pos: [ 0.40,  1.51,  0] },    // H on C3 — 9
+            { type: 'H', pos: [ 1.27,  0.23, -0.89] }, // H on C3 — 10
         ],
         bonds: [[0,1],[1,2],[0,3],[0,4],[0,5],[1,6],[1,7],[2,8],[2,9],[2,10]]
     },
@@ -351,13 +353,13 @@ export const MOLECULES = {
         bonds: []
     },
     'Al2O3': {
-        // Two Al bridged by 3 O atoms
+        // Two Al bridged by 3 O atoms — compact so two instances don't overlap
         atoms: [
-            { type: 'Al', pos: [-0.8,  0.7, 0] }, // Al1 — 0
-            { type: 'Al', pos: [ 0.8,  0.7, 0] }, // Al2 — 1
-            { type: 'O',  pos: [-1.4, -0.3, 0] }, // O1  — 2
-            { type: 'O',  pos: [ 0,   -0.3, 0] }, // O2 bridging — 3
-            { type: 'O',  pos: [ 1.4, -0.3, 0] }, // O3  — 4
+            { type: 'Al', pos: [-0.7,  0.6, 0] }, // Al1 — 0
+            { type: 'Al', pos: [ 0.7,  0.6, 0] }, // Al2 — 1
+            { type: 'O',  pos: [-1.2, -0.2, 0] }, // O1  — 2
+            { type: 'O',  pos: [ 0,   -0.2, 0] }, // O2 bridging — 3
+            { type: 'O',  pos: [ 1.2, -0.2, 0] }, // O3  — 4
         ],
         bonds: [[0,2],[0,3],[1,3],[1,4]]
     }
