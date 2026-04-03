@@ -156,6 +156,29 @@ select:disabled {
     border: 1px solid var(--border-color);
 }
 
+/* ===== Speed Control ===== */
+.speed-control {
+    margin-top: 6px;
+    padding: 8px 12px;
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+}
+
+.speed-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--stats-label-color);
+    margin-bottom: 4px;
+}
+
+#speed-slider {
+    width: 100%;
+    accent-color: var(--primary-color);
+    cursor: pointer;
+}
+
 /* ===== Atom Legend ===== */
 .atom-legend {
     padding: 10px 12px;

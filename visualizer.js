@@ -122,8 +122,10 @@ function setupUI() {
         updateReactionInfo();
         renderMolecules('reactants');
         currentView = 'reactants';
-        // Show animate button only if mapping exists
-        animBtn.style.display = selectedReaction.atomMapping ? 'block' : 'none';
+        // Show animate button and speed slider only if mapping exists
+        const hasAnim = !!selectedReaction.atomMapping;
+        animBtn.style.display = hasAnim ? 'block' : 'none';
+        speedControl.style.display = hasAnim ? 'block' : 'none';
     });
 
     document.getElementById('show-reactants').addEventListener('click', () => {
@@ -143,6 +145,9 @@ function setupUI() {
     animBtn.addEventListener('click', () => {
         if (selectedReaction && !isAnimating) startAnimation();
     });
+
+    // Show speed slider together with animate button
+    const speedControl = document.getElementById('speed-control');
 
     // Theme buttons
     document.querySelectorAll('.theme-btn').forEach(btn => {
@@ -339,7 +344,10 @@ function startAnimation() {
         productAtoms[toIdx].worldPos
     );
 
-    animateAtoms(meshes, targets, 2000, () => {
+    const speedMap = { 1: 4000, 2: 2000, 3: 800 };
+    const duration = speedMap[document.getElementById('speed-slider').value] ?? 2000;
+
+    animateAtoms(meshes, targets, duration, () => {
         // Cleanup temp meshes, show final product molecules
         meshes.forEach(m => scene.remove(m));
         renderMolecules('products');
