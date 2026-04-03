@@ -260,21 +260,21 @@ export const MOLECULES = {
         bonds: [[0,1],[1,2],[2,3],[0,4],[0,5],[0,6],[1,7],[1,8]]
     },
     'C3H8': {
-        // Propane with correct geometry:
-        // C-C-C angle ~112°, tetrahedral H positions (~109.5° H-C-C angles)
-        // C2 at origin, C1/C3 symmetric at 56° from vertical
+        // Propane: C-C-C backbone opens downward (V shape ∨),
+        // so all outward H atoms point away from the molecule center.
+        // C-C-C angle ~112°, H-C-C angles ~109.5°.
         atoms: [
-            { type: 'C', pos: [-1.28,  0.86,  0] },    // C1 — 0
+            { type: 'C', pos: [-1.28, -0.86,  0] },    // C1 — 0
             { type: 'C', pos: [ 0,     0,     0] },    // C2 — 1
-            { type: 'C', pos: [ 1.28,  0.86,  0] },    // C3 — 2
-            { type: 'H', pos: [-1.01,  1.92,  0] },    // H on C1 — 3
-            { type: 'H', pos: [-1.87,  0.64,  0.89] }, // H on C1 — 4
-            { type: 'H', pos: [-1.87,  0.64, -0.89] }, // H on C1 — 5
-            { type: 'H', pos: [ 0,    -0.65,  0.88] }, // H on C2 — 6
-            { type: 'H', pos: [ 0,    -0.65, -0.88] }, // H on C2 — 7
-            { type: 'H', pos: [ 1.27,  0.23,  0.89] }, // H on C3 — 8
-            { type: 'H', pos: [ 0.40,  1.51,  0] },    // H on C3 — 9
-            { type: 'H', pos: [ 1.27,  0.23, -0.89] }, // H on C3 — 10
+            { type: 'C', pos: [ 1.28, -0.86,  0] },    // C3 — 2
+            { type: 'H', pos: [-2.16, -0.21,  0] },    // H on C1 (outward) — 3
+            { type: 'H', pos: [-1.30, -1.49,  0.89] }, // H on C1 — 4
+            { type: 'H', pos: [-1.30, -1.49, -0.89] }, // H on C1 — 5
+            { type: 'H', pos: [ 0,     0.65,  0.88] }, // H on C2 (upward) — 6
+            { type: 'H', pos: [ 0,     0.65, -0.88] }, // H on C2 — 7
+            { type: 'H', pos: [ 2.16, -0.21,  0] },    // H on C3 (outward) — 8
+            { type: 'H', pos: [ 1.30, -1.49,  0.89] }, // H on C3 — 9
+            { type: 'H', pos: [ 1.30, -1.49, -0.89] }, // H on C3 — 10
         ],
         bonds: [[0,1],[1,2],[0,3],[0,4],[0,5],[1,6],[1,7],[2,8],[2,9],[2,10]]
     },
