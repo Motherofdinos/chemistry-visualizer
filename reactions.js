@@ -214,10 +214,11 @@ export const MOLECULES = {
         bonds: []
     },
     'NaOH': {
+        // Na-O bond ~1.0 (scaled), O-H with ~110° angle (not linear)
         atoms: [
-            { type: 'Na', pos: [0,   0, 0] },
-            { type: 'O',  pos: [1.8, 0, 0] },
-            { type: 'H',  pos: [2.8, 0, 0] }
+            { type: 'Na', pos: [0,    0,   0] },
+            { type: 'O',  pos: [1.0,  0,   0] },
+            { type: 'H',  pos: [1.4,  0.7, 0] }
         ],
         bonds: [[0,1],[1,2]]
     },
@@ -226,9 +227,10 @@ export const MOLECULES = {
         bonds: []
     },
     'MgO': {
+        // Compact positions so two MgO instances don't overlap at spacing=3
         atoms: [
-            { type: 'Mg', pos: [-0.9, 0, 0] },
-            { type: 'O',  pos: [ 0.9, 0, 0] }
+            { type: 'Mg', pos: [-0.55, 0, 0] },
+            { type: 'O',  pos: [ 0.55, 0, 0] }
         ],
         bonds: [[0, 1]]
     }
