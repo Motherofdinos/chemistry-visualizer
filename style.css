@@ -1,0 +1,289 @@
+/* ===== CSS Variables — default: Dark theme ===== */
+:root {
+    --bg-color: #1a1a2e;
+    --sidebar-bg: #16213e;
+    --primary-color: #4a90e2;
+    --text-color: #e0e0e0;
+    --accent-color: #e67e22;
+    --border-radius: 12px;
+    --card-bg: #0f3460;
+    --select-bg: #1a2a4a;
+    --border-color: #2a4a6a;
+    --equation-bg: #0a1628;
+    --stats-label-color: #aaa;
+    --shadow: rgba(0,0,0,0.4);
+}
+
+/* ===== Light theme ===== */
+body[data-theme="light"] {
+    --bg-color: #f0f4f8;
+    --sidebar-bg: #ffffff;
+    --primary-color: #2563eb;
+    --text-color: #1a1a2e;
+    --accent-color: #e67e22;
+    --card-bg: #f8f9fa;
+    --select-bg: #ffffff;
+    --border-color: #ddd;
+    --equation-bg: #ffffff;
+    --stats-label-color: #666;
+    --shadow: rgba(0,0,0,0.1);
+}
+
+/* ===== Lab theme ===== */
+body[data-theme="lab"] {
+    --bg-color: #0d1b0d;
+    --sidebar-bg: #1a2a1a;
+    --primary-color: #4caf50;
+    --text-color: #c8e6c9;
+    --accent-color: #8bc34a;
+    --card-bg: #0f1f0f;
+    --select-bg: #152015;
+    --border-color: #2d4a2d;
+    --equation-bg: #0a150a;
+    --stats-label-color: #81c784;
+    --shadow: rgba(0,0,0,0.5);
+}
+
+/* ===== Space theme ===== */
+body[data-theme="space"] {
+    --bg-color: #020208;
+    --sidebar-bg: #080820;
+    --primary-color: #7c3aed;
+    --text-color: #c4b5fd;
+    --accent-color: #a78bfa;
+    --card-bg: #0c0c28;
+    --select-bg: #0c0c28;
+    --border-color: #2e1e6e;
+    --equation-bg: #060618;
+    --stats-label-color: #9c86d8;
+    --shadow: rgba(0,0,0,0.6);
+}
+
+/* ===== Reset ===== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    height: 100vh;
+    overflow: hidden;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.container {
+    display: flex;
+    height: 100%;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+    width: 350px;
+    background: var(--sidebar-bg);
+    padding: 1.5rem;
+    box-shadow: 2px 0 10px var(--shadow);
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+    transition: background 0.3s;
+    overflow-y: auto;
+}
+
+h1 {
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+    color: var(--primary-color);
+}
+
+.selection-group {
+    margin-bottom: 1.2rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: bold;
+    font-size: 0.85rem;
+    color: var(--text-color);
+}
+
+select {
+    width: 100%;
+    padding: 0.7rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background: var(--select-bg);
+    color: var(--text-color);
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: border-color 0.3s, background 0.3s;
+}
+
+select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ===== Info Card ===== */
+.info-card {
+    background: var(--card-bg);
+    padding: 1.2rem;
+    border-radius: var(--border-radius);
+    margin-top: 0.8rem;
+    flex-grow: 1;
+    border: 1px solid var(--border-color);
+    transition: background 0.3s;
+}
+
+.equation {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--accent-color);
+    margin: 0.8rem 0;
+    text-align: center;
+    background: var(--equation-bg);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+/* ===== Theme Switcher ===== */
+.theme-switcher {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 1rem;
+    padding: 8px 10px;
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+}
+
+.theme-label {
+    font-size: 0.8rem;
+    color: var(--stats-label-color);
+    margin-right: 2px;
+}
+
+.theme-btn {
+    flex: 1;
+    padding: 6px;
+    font-size: 1.1rem;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    background: var(--select-bg);
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.1s;
+    line-height: 1;
+}
+
+.theme-btn:hover {
+    border-color: var(--primary-color);
+    transform: scale(1.1);
+    opacity: 1;
+}
+
+.theme-btn.active {
+    border-color: var(--primary-color);
+    background: var(--primary-color);
+}
+
+/* ===== Controls ===== */
+.controls {
+    margin-top: 1rem;
+    display: flex;
+    gap: 10px;
+}
+
+button {
+    flex: 1;
+    padding: 0.75rem;
+    border: none;
+    border-radius: var(--border-radius);
+    background: var(--primary-color);
+    color: white;
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+}
+
+button:hover {
+    opacity: 0.85;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#show-products {
+    background: var(--accent-color);
+}
+
+/* ===== Animate button ===== */
+.animate-btn {
+    width: 100%;
+    margin-top: 8px;
+    background: linear-gradient(135deg, #7c3aed, #4a90e2);
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+    display: none;
+}
+
+.animate-btn:hover {
+    opacity: 0.9;
+}
+
+/* ===== Main canvas ===== */
+main {
+    flex-grow: 1;
+    position: relative;
+    background: #000;
+}
+
+#loading-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 1.2rem;
+}
+
+/* ===== Footer ===== */
+footer {
+    margin-top: auto;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--stats-label-color);
+    padding-top: 1rem;
+}
+
+/* ===== Stats ===== */
+.stats {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+
+.stats h4 {
+    margin-top: 0.5rem;
+    color: var(--stats-label-color);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
