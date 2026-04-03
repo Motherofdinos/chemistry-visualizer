@@ -234,7 +234,7 @@ function createMolecule(formula) {
         // Single bond: thick, gray. Double: thinner + farther apart, yellow tint. Triple: even thinner + blue tint.
         const radius     = count === 1 ? 0.12 : count === 2 ? 0.07 : 0.06;
         const offsetStep = count === 2 ? 0.35 : 0.28;
-        const color      = count === 1 ? 0xcccccc : count === 2 ? 0xdddd99 : 0x99ccff;
+        const color      = 0xcccccc;
 
         for (let i = 0; i < count; i++) {
             const cyl = new THREE.Mesh(
