@@ -496,5 +496,5 @@ export const ATOMS = {
     'Mg': { color: 0x00cc66, radius: 0.75 },
     'Ca': { color: 0x66aaff, radius: 0.80 },
     'Al': { color: 0xccccdd, radius: 0.72 },
-    'Cl': { color: 0x00cc44, radius: 0.65 },
+    'Cl': { color: 0xaaee00, radius: 0.65 },
 };
