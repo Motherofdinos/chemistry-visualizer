@@ -143,6 +143,97 @@ export const TOPICS = [
         ]
     },
     {
+        id: 'combination',
+        title: 'Реакції сполучення',
+        reactions: [
+            {
+                id: 'comb-h2-o2',
+                title: 'Синтез води',
+                equation: '2H₂ + O₂ → 2H₂O',
+                reactants: [{ formula: 'H2', count: 2 }, { formula: 'O2', count: 1 }],
+                products: [{ formula: 'H2O', count: 2 }],
+                // H2[0]:0,1 | H2[1]:2,3 | O2:4,5 → H2O[0]:0(O),1,2(H) | H2O[1]:3(O),4,5(H)
+                atomMapping: [[0,1],[1,2],[2,4],[3,5],[4,0],[5,3]]
+            },
+            {
+                id: 'comb-s-o2',
+                title: 'Сполучення сірки з киснем',
+                equation: 'S + O₂ → SO₂',
+                reactants: [{ formula: 'S', count: 1 }, { formula: 'O2', count: 1 }],
+                products: [{ formula: 'SO2', count: 1 }],
+                // S:0 | O2:1,2 → SO2:0(S),1(O),2(O)
+                atomMapping: [[0,0],[1,1],[2,2]]
+            },
+            {
+                id: 'comb-n2-h2',
+                title: 'Синтез аміаку (Габер)',
+                equation: 'N₂ + 3H₂ → 2NH₃',
+                reactants: [{ formula: 'N2', count: 1 }, { formula: 'H2', count: 3 }],
+                products: [{ formula: 'NH3', count: 2 }],
+                // N2:0,1 | H2[0]:2,3 | H2[1]:4,5 | H2[2]:6,7 → NH3[0]:0(N),1,2,3(H) | NH3[1]:4(N),5,6,7(H)
+                atomMapping: [[0,0],[1,4],[2,1],[3,2],[4,3],[5,5],[6,6],[7,7]]
+            }
+        ]
+    },
+    {
+        id: 'decomposition',
+        title: 'Реакції розкладу',
+        reactions: [
+            {
+                id: 'decomp-h2o',
+                title: 'Розклад води (електроліз)',
+                equation: '2H₂O → 2H₂ + O₂',
+                reactants: [{ formula: 'H2O', count: 2 }],
+                products: [{ formula: 'H2', count: 2 }, { formula: 'O2', count: 1 }],
+                // H2O[0]:0(O),1,2(H) | H2O[1]:3(O),4,5(H) → H2[0]:0,1 | H2[1]:2,3 | O2:4,5
+                atomMapping: [[0,4],[1,0],[2,1],[3,5],[4,2],[5,3]]
+            },
+            {
+                id: 'decomp-nh3',
+                title: 'Розклад аміаку',
+                equation: '2NH₃ → N₂ + 3H₂',
+                reactants: [{ formula: 'NH3', count: 2 }],
+                products: [{ formula: 'N2', count: 1 }, { formula: 'H2', count: 3 }],
+                // NH3[0]:0(N),1,2,3(H) | NH3[1]:4(N),5,6,7(H) → N2:0,1 | H2[0]:2,3 | H2[1]:4,5 | H2[2]:6,7
+                atomMapping: [[0,0],[1,2],[2,3],[3,4],[4,1],[5,5],[6,6],[7,7]]
+            },
+            {
+                id: 'decomp-caco3',
+                title: 'Розклад карбонату кальцію',
+                equation: 'CaCO₃ → CaO + CO₂',
+                reactants: [{ formula: 'CaCO3', count: 1 }],
+                products: [{ formula: 'CaO', count: 1 }, { formula: 'CO2', count: 1 }],
+                // CaCO3:0(Ca),1(C),2(O),3(O),4(O) → CaO:0(Ca),1(O) | CO2:2(C),3(O),4(O)
+                atomMapping: [[0,0],[1,2],[2,3],[3,4],[4,1]]
+            }
+        ]
+    },
+    {
+        id: 'substitution',
+        title: 'Реакції заміщення',
+        reactions: [
+            {
+                id: 'subst-na-h2o',
+                title: 'Натрій витісняє водень з води',
+                equation: '2Na + 2H₂O → 2NaOH + H₂',
+                reactants: [{ formula: 'Na', count: 2 }, { formula: 'H2O', count: 2 }],
+                products: [{ formula: 'NaOH', count: 2 }, { formula: 'H2', count: 1 }],
+                // Na[0]:0 | Na[1]:1 | H2O[0]:2(O),3,4(H) | H2O[1]:5(O),6,7(H)
+                // NaOH[0]:0(Na),1(O),2(H) | NaOH[1]:3(Na),4(O),5(H) | H2:6,7(H)
+                atomMapping: [[0,0],[1,3],[2,1],[3,2],[4,6],[5,4],[6,5],[7,7]]
+            },
+            {
+                id: 'subst-mg-hcl',
+                title: 'Магній витісняє водень з кислоти',
+                equation: 'Mg + 2HCl → MgCl₂ + H₂',
+                reactants: [{ formula: 'Mg', count: 1 }, { formula: 'HCl', count: 2 }],
+                products: [{ formula: 'MgCl2', count: 1 }, { formula: 'H2', count: 1 }],
+                // Mg:0 | HCl[0]:1(H),2(Cl) | HCl[1]:3(H),4(Cl) → MgCl2:0(Mg),1(Cl),2(Cl) | H2:3,4(H)
+                atomMapping: [[0,0],[1,3],[2,1],[3,4],[4,2]]
+            }
+        ]
+    },
+    {
         id: 'redox',
         title: 'Окисно-відновні реакції',
         reactions: [
@@ -198,6 +289,9 @@ export const MOLECULE_INFO = {
     'CaOH2':  { name: 'Гідроксид кальцію',   molarMass: 74.09  },
     'Al':     { name: 'Алюміній',            molarMass: 26.98  },
     'Al2O3':  { name: 'Оксид алюмінію',      molarMass: 101.96 },
+    'HCl':    { name: 'Хлоридна кислота',    molarMass: 36.46  },
+    'MgCl2':  { name: 'Хлорид магнію',       molarMass: 95.21  },
+    'CaCO3':  { name: 'Карбонат кальцію',    molarMass: 100.09 },
 };
 
 export const MOLECULES = {
@@ -362,6 +456,33 @@ export const MOLECULES = {
             { type: 'O',  pos: [ 1.2, -0.2, 0] }, // O3  — 4
         ],
         bonds: [[0,2],[0,3],[1,3],[1,4]]
+    },
+    'HCl': {
+        atoms: [
+            { type: 'H',  pos: [0, 0, -0.64] },
+            { type: 'Cl', pos: [0, 0,  0.64] }
+        ],
+        bonds: [[0, 1]]
+    },
+    'MgCl2': {
+        // Linear: Cl-Mg-Cl
+        atoms: [
+            { type: 'Cl', pos: [-1.1, 0, 0] },
+            { type: 'Mg', pos: [ 0,   0, 0] },
+            { type: 'Cl', pos: [ 1.1, 0, 0] }
+        ],
+        bonds: [[0,1],[1,2]]
+    },
+    'CaCO3': {
+        // Ca²⁺ + CO₃²⁻ (trigonal planar CO3 group)
+        atoms: [
+            { type: 'Ca', pos: [-1.5,  0,    0] }, // Ca — 0
+            { type: 'C',  pos: [ 0.5,  0,    0] }, // C  — 1
+            { type: 'O',  pos: [ 1.2,  1.0,  0] }, // O  — 2
+            { type: 'O',  pos: [ 1.2, -1.0,  0] }, // O  — 3
+            { type: 'O',  pos: [-0.2,  0,    0] }, // O bridging — 4
+        ],
+        bonds: [[0,4],[4,1],[1,2],[1,3]]
     }
 };
 
@@ -375,4 +496,5 @@ export const ATOMS = {
     'Mg': { color: 0x00cc66, radius: 0.75 },
     'Ca': { color: 0x66aaff, radius: 0.80 },
     'Al': { color: 0xccccdd, radius: 0.72 },
+    'Cl': { color: 0x00cc44, radius: 0.65 },
 };
