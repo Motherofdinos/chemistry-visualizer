@@ -327,13 +327,39 @@ function setupRaycasting() {
     document.getElementById('popup-close').addEventListener('click', hidePopup);
 }
 
-function showPopup(formula, clientX, clientY) {
+const PUBCHEM_CID = {
+    'H2': 783, 'O2': 977, 'H2O': 962, 'C': 5462310, 'CO2': 280,
+    'CH4': 297, 'C2H5OH': 702, 'C3H8': 6334, 'N2': 947, 'NH3': 222,
+    'Na': 5360545, 'NaOH': 14798, 'Mg': 5462224, 'MgO': 14792,
+    'S': 5362487, 'SO2': 1119, 'CaO': 14778, 'CaOH2': 6093208,
+    'Al': 5359268, 'Al2O3': 9989226, 'HCl': 313, 'MgCl2': 24584,
+    'CaCO3': 10112
+};
+
+async function showPopup(formula, clientX, clientY) {
     const info = MOLECULE_INFO[formula];
     if (!info) return;
 
     document.getElementById('popup-name').textContent = info.name;
     document.getElementById('popup-formula').textContent = formula;
     document.getElementById('popup-mass').textContent = `Молярна маса: ${info.molarMass} г/моль`;
+    document.getElementById('popup-extra').textContent = 'Завантаження з PubChem...';
+
+    const cid = PUBCHEM_CID[formula];
+    if (cid) {
+        try {
+            const res = await fetch(
+                `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${cid}/property/IUPACName,MolecularWeight/JSON`
+            );
+            const data = await res.json();
+            const props = data.PropertyTable.Properties[0];
+            document.getElementById('popup-extra').textContent = `IUPAC: ${props.IUPACName}`;
+        } catch {
+            document.getElementById('popup-extra').textContent = '';
+        }
+    } else {
+        document.getElementById('popup-extra').textContent = '';
+    }
 
     const popup = document.getElementById('mol-popup');
     popup.style.display = 'block';
