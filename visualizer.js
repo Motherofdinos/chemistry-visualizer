@@ -358,8 +358,10 @@ async function showPopup(formula, clientX, clientY) {
 
             const getVal = d => d?.Record?.Section?.[0]?.Section?.[0]?.Section?.[0]?.Information?.[0]?.Value?.StringWithMarkup?.[0]?.String ?? '—';
 
+            const fToC = s => s.replace(/([-\d.]+)\s*°F/g, (_, f) => `${Math.round((f - 32) * 5 / 9)} °C`);
+
             const iupac    = propsData.PropertyTable.Properties[0].IUPACName;
-            const bp       = getVal(bpData);
+            const bp       = fToC(getVal(bpData));
             const stateRaw = getVal(stateData);
             const state    = stateRaw === '—' ? '—' : stateRaw.split('.')[0];
 
