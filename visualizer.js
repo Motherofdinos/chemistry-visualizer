@@ -353,12 +353,15 @@ async function showPopup(formula, clientX, clientY) {
             const [propsData, bpData, stateData] = await Promise.all([
                 fetch(`${base}/compound/cid/${cid}/property/IUPACName/JSON`).then(r => r.json()),
                 fetch(`${view}?heading=Boiling+Point`).then(r => r.json()).catch(() => null),
-                fetch(`${view}?heading=Physical+State`).then(r => r.json()).catch(() => null)
+                fetch(`${view}?heading=Physical+Description`).then(r => r.json()).catch(() => null)
             ]);
 
-            const iupac = propsData.PropertyTable.Properties[0].IUPACName;
-            const bp    = bpData?.Record?.Section?.[0]?.Information?.[0]?.Value?.StringWithMarkup?.[0]?.String ?? '—';
-            const state = stateData?.Record?.Section?.[0]?.Information?.[0]?.Value?.StringWithMarkup?.[0]?.String ?? '—';
+            const getVal = d => d?.Record?.Section?.[0]?.Section?.[0]?.Section?.[0]?.Information?.[0]?.Value?.StringWithMarkup?.[0]?.String ?? '—';
+
+            const iupac    = propsData.PropertyTable.Properties[0].IUPACName;
+            const bp       = getVal(bpData);
+            const stateRaw = getVal(stateData);
+            const state    = stateRaw === '—' ? '—' : stateRaw.split('.')[0];
 
             document.getElementById('popup-extra').innerHTML =
                 `<b>IUPAC:</b> ${iupac}<br>` +
