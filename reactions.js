@@ -74,9 +74,38 @@ export const TOPICS = [
                 equation: 'C₂H₅OH + 3O₂ → 2CO₂ + 3H₂O',
                 reactants: [{ formula: 'C2H5OH', count: 1 }, { formula: 'O2', count: 3 }],
                 products: [{ formula: 'CO2', count: 2 }, { formula: 'H2O', count: 3 }],
-                // C2H5OH:0(C1),1(C2),2(O),3-8(H) | O2[0]:9,10 | O2[1]:11,12 | O2[2]:13,14
-                // CO2[0]:0(C),1,2(O) | CO2[1]:3(C),4,5(O) | H2O[0]:6(O),7,8(H) | H2O[1]:9(O),10,11(H) | H2O[2]:12(O),13,14(H)
                 atomMapping: [[0,0],[1,3],[2,6],[3,7],[4,8],[5,10],[6,11],[7,13],[8,14],[9,1],[10,2],[11,4],[12,5],[13,9],[14,12]]
+            },
+            {
+                id: 'methanol-o2',
+                title: 'Горіння метанолу',
+                equation: '2CH₃OH + 3O₂ → 2CO₂ + 4H₂O',
+                reactants: [{ formula: 'CH3OH', count: 2 }, { formula: 'O2', count: 3 }],
+                products: [{ formula: 'CO2', count: 2 }, { formula: 'H2O', count: 4 }],
+                // CH3OH[0]:0(C),1(O),2-5(H) | CH3OH[1]:6(C),7(O),8-11(H) | O2[0]:12,13 | O2[1]:14,15 | O2[2]:16,17
+                // CO2[0]:0(C),1,2(O) | CO2[1]:3(C),4,5(O) | H2O[0]:6(O),7,8(H) | H2O[1]:9(O),10,11(H) | H2O[2]:12(O),13,14(H) | H2O[3]:15(O),16,17(H)
+                atomMapping: [[0,0],[1,6],[2,7],[3,8],[4,10],[5,11],[6,3],[7,12],[8,13],[9,14],[10,16],[11,17],[12,1],[13,2],[14,4],[15,5],[16,9],[17,15]]
+            },
+            {
+                id: 'ethanol-dehydration',
+                title: 'Дегідратація етанолу',
+                equation: 'C₂H₅OH → C₂H₄ + H₂O',
+                reactants: [{ formula: 'C2H5OH', count: 1 }],
+                products: [{ formula: 'C2H4', count: 1 }, { formula: 'H2O', count: 1 }],
+                // C2H5OH:0(C1),1(C2),2(O),3(H on O),4,5,6(H on C1),7,8(H on C2)
+                // C2H4:0(C),1(C),2,3,4,5(H) | H2O:6(O),7,8(H)
+                atomMapping: [[0,0],[1,1],[2,6],[3,7],[4,2],[5,3],[6,8],[7,4],[8,5]]
+            },
+            {
+                id: 'ethanol-oxidation',
+                title: 'Окиснення етанолу до оцтового альдегіду',
+                equation: '2C₂H₅OH + O₂ → 2CH₃CHO + 2H₂O',
+                reactants: [{ formula: 'C2H5OH', count: 2 }, { formula: 'O2', count: 1 }],
+                products: [{ formula: 'CH3CHO', count: 2 }, { formula: 'H2O', count: 2 }],
+                // C2H5OH[0]:0(C),1(C),2(O),3-8(H) | C2H5OH[1]:9(C),10(C),11(O),12-17(H) | O2:18,19
+                // CH3CHO[0]:0(C),1(C),2(O),3(H ald),4,5,6(H methyl) | CH3CHO[1]:7,8,9,10,11,12,13
+                // H2O[0]:14(O),15,16(H) | H2O[1]:17(O),18,19(H)
+                atomMapping: [[0,0],[1,1],[2,14],[3,15],[4,4],[5,5],[6,6],[7,3],[8,16],[9,7],[10,8],[11,17],[12,18],[13,11],[14,12],[15,13],[16,10],[17,19],[18,2],[19,9]]
             }
         ]
     },
@@ -292,6 +321,9 @@ export const MOLECULE_INFO = {
     'HCl':    { name: 'Хлоридна кислота',    molarMass: 36.46  },
     'MgCl2':  { name: 'Хлорид магнію',       molarMass: 95.21  },
     'CaCO3':  { name: 'Карбонат кальцію',    molarMass: 100.09 },
+    'CH3OH':  { name: 'Метанол',             molarMass: 32.04  },
+    'C2H4':   { name: 'Етилен',              molarMass: 28.05  },
+    'CH3CHO': { name: 'Оцтовий альдегід',    molarMass: 44.05  },
 };
 
 export const MOLECULES = {
@@ -456,6 +488,42 @@ export const MOLECULES = {
             { type: 'O',  pos: [ 1.2, -0.2, 0] }, // O3  — 4
         ],
         bonds: [[0,2],[0,3],[1,3],[1,4]]
+    },
+    'CH3OH': {
+        atoms: [
+            { type: 'C', pos: [ 0,    0,    0] },  // C — 0
+            { type: 'O', pos: [ 1.43, 0,    0] },  // O — 1
+            { type: 'H', pos: [ 1.83, 0.9,  0] },  // H on O — 2
+            { type: 'H', pos: [-0.5,  0.9,  0.7] },// H on C — 3
+            { type: 'H', pos: [-0.5,  0.9, -0.7] },// H on C — 4
+            { type: 'H', pos: [-0.5, -0.9,  0] },  // H on C — 5
+        ],
+        bonds: [[0,1],[1,2],[0,3],[0,4],[0,5]]
+    },
+    'C2H4': {
+        // Ethylene: planar, double C=C bond
+        atoms: [
+            { type: 'C', pos: [-0.67, 0,     0] }, // C — 0
+            { type: 'C', pos: [ 0.67, 0,     0] }, // C — 1
+            { type: 'H', pos: [-1.22, 0.92,  0] }, // H — 2
+            { type: 'H', pos: [-1.22,-0.92,  0] }, // H — 3
+            { type: 'H', pos: [ 1.22, 0.92,  0] }, // H — 4
+            { type: 'H', pos: [ 1.22,-0.92,  0] }, // H — 5
+        ],
+        bonds: [[0,1,2],[0,2],[0,3],[1,4],[1,5]]
+    },
+    'CH3CHO': {
+        // Acetaldehyde: CH3-CHO
+        atoms: [
+            { type: 'C', pos: [ 0,    0,    0] },  // methyl C — 0
+            { type: 'C', pos: [ 1.54, 0,    0] },  // carbonyl C — 1
+            { type: 'O', pos: [ 2.2,  1.1,  0] },  // O (double bond) — 2
+            { type: 'H', pos: [ 2.1, -0.9,  0] },  // aldehyde H — 3
+            { type: 'H', pos: [-0.5,  0.9,  0.7] },// H on methyl — 4
+            { type: 'H', pos: [-0.5,  0.9, -0.7] },// H on methyl — 5
+            { type: 'H', pos: [-0.5, -0.9,  0] },  // H on methyl — 6
+        ],
+        bonds: [[0,1],[1,2,2],[1,3],[0,4],[0,5],[0,6]]
     },
     'HCl': {
         atoms: [

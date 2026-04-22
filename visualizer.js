@@ -333,7 +333,7 @@ const PUBCHEM_CID = {
     'Na': 5360545, 'NaOH': 14798, 'Mg': 5462224, 'MgO': 14792,
     'S': 5362487, 'SO2': 1119, 'CaO': 14778, 'CaOH2': 6093208,
     'Al': 5359268, 'Al2O3': 9989226, 'HCl': 313, 'MgCl2': 24584,
-    'CaCO3': 10112
+    'CaCO3': 10112, 'CH3OH': 887, 'C2H4': 6325, 'CH3CHO': 177
 };
 
 async function showPopup(formula, clientX, clientY) {
