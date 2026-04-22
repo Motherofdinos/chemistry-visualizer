@@ -205,6 +205,35 @@ function updateLegend() {
 
 // ─── 3D Molecules ────────────────────────────────────────────────────────────
 
+function makeChargeSprite(charge) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 128; canvas.height = 128;
+    const ctx = canvas.getContext('2d');
+
+    ctx.beginPath();
+    ctx.arc(64, 64, 54, 0, Math.PI * 2);
+    ctx.fillStyle = charge > 0 ? 'rgba(80,140,255,0.93)' : 'rgba(255,80,80,0.93)';
+    ctx.fill();
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 5;
+    ctx.stroke();
+
+    const abs  = Math.abs(charge);
+    const sign = charge > 0 ? '+' : '−';
+    const text = abs === 1 ? sign : `${sign}${abs}`;
+    ctx.fillStyle = 'white';
+    ctx.font = 'bold 58px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(text, 64, 64);
+
+    const sprite = new THREE.Sprite(
+        new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(canvas), depthWrite: false })
+    );
+    sprite.scale.set(0.65, 0.65, 1);
+    return sprite;
+}
+
 function createMolecule(formula) {
     const data = MOLECULES[formula];
     if (!data) return new THREE.Group();
@@ -226,32 +255,51 @@ function createMolecule(formula) {
 
     data.bonds.forEach(bond => {
         const start = atomMeshes[bond[0]].position;
-        const end = atomMeshes[bond[1]].position;
-        const count = bond[2] || 1;
-        const dir = new THREE.Vector3().subVectors(end, start);
-        const len = dir.length();
+        const end   = atomMeshes[bond[1]].position;
+        const count = bond[2] ?? 1;
 
-        // Single bond: thick, gray. Double: thinner + farther apart, yellow tint. Triple: even thinner + blue tint.
-        const radius     = count === 1 ? 0.12 : count === 2 ? 0.07 : 0.06;
-        const offsetStep = count === 2 ? 0.35 : 0.28;
-        const color      = 0xcccccc;
-
-        for (let i = 0; i < count; i++) {
-            const cyl = new THREE.Mesh(
-                new THREE.CylinderGeometry(radius, radius, len, 8),
-                new THREE.MeshPhongMaterial({ color })
-            );
-            cyl.position.addVectors(start, end).multiplyScalar(0.5);
-            if (count > 1) {
-                const offset = (i - (count - 1) / 2) * offsetStep;
-                const perp = new THREE.Vector3(0, 1, 0).cross(dir).normalize().multiplyScalar(offset);
-                if (perp.length() === 0) perp.set(1, 0, 0).multiplyScalar(offset);
-                cyl.position.add(perp);
+        if (count === -1) {
+            // Ionic bond: dashed line
+            const pts = [start.clone(), end.clone()];
+            const geo = new THREE.BufferGeometry().setFromPoints(pts);
+            const mat = new THREE.LineDashedMaterial({ color: 0xffaa33, dashSize: 0.22, gapSize: 0.14 });
+            const line = new THREE.Line(geo, mat);
+            line.computeLineDistances();
+            group.add(line);
+        } else {
+            // Covalent bond: cylinder
+            const dir  = new THREE.Vector3().subVectors(end, start);
+            const len  = dir.length();
+            const radius     = count === 1 ? 0.12 : count === 2 ? 0.07 : 0.06;
+            const offsetStep = count === 2 ? 0.35 : 0.28;
+            for (let i = 0; i < count; i++) {
+                const cyl = new THREE.Mesh(
+                    new THREE.CylinderGeometry(radius, radius, len, 8),
+                    new THREE.MeshPhongMaterial({ color: 0xcccccc })
+                );
+                cyl.position.addVectors(start, end).multiplyScalar(0.5);
+                if (count > 1) {
+                    const offset = (i - (count - 1) / 2) * offsetStep;
+                    const perp = new THREE.Vector3(0, 1, 0).cross(dir).normalize().multiplyScalar(offset);
+                    if (perp.length() === 0) perp.set(1, 0, 0).multiplyScalar(offset);
+                    cyl.position.add(perp);
+                }
+                cyl.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.clone().normalize());
+                group.add(cyl);
             }
-            cyl.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.clone().normalize());
-            group.add(cyl);
         }
     });
+
+    // Charge labels for ionic atoms
+    if (data.ionicAtoms) {
+        Object.entries(data.ionicAtoms).forEach(([idx, charge]) => {
+            const sprite = makeChargeSprite(charge);
+            const pos    = atomMeshes[parseInt(idx)].position;
+            const r      = ATOMS[data.atoms[parseInt(idx)].type]?.radius ?? 0.5;
+            sprite.position.set(pos.x + r * 0.65, pos.y + r * 0.65, pos.z + r * 0.5);
+            group.add(sprite);
+        });
+    }
 
     return group;
 }

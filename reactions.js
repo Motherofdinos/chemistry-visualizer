@@ -425,23 +425,25 @@ export const MOLECULES = {
         bonds: []
     },
     'NaOH': {
+        ionicAtoms: { 0: 1, 1: -1 },
         atoms: [
             { type: 'Na', pos: [0,   0,   0] },
             { type: 'O',  pos: [1.0, 0,   0] },
             { type: 'H',  pos: [1.4, 0.7, 0] }
         ],
-        bonds: [[0,1],[1,2]]
+        bonds: [[0,1,-1],[1,2]]
     },
     'Mg': {
         atoms: [{ type: 'Mg', pos: [0, 0, 0] }],
         bonds: []
     },
     'MgO': {
+        ionicAtoms: { 0: 2, 1: -2 },
         atoms: [
             { type: 'Mg', pos: [-0.55, 0, 0] },
             { type: 'O',  pos: [ 0.55, 0, 0] }
         ],
-        bonds: [[0, 1]]
+        bonds: [[0, 1, -1]]
     },
     'S': {
         atoms: [{ type: 'S', pos: [0, 0, 0] }],
@@ -457,14 +459,15 @@ export const MOLECULES = {
         bonds: [[0,1,2],[0,2,2]]
     },
     'CaO': {
+        ionicAtoms: { 0: 2, 1: -2 },
         atoms: [
             { type: 'Ca', pos: [-0.6, 0, 0] },
             { type: 'O',  pos: [ 0.6, 0, 0] }
         ],
-        bonds: [[0, 1]]
+        bonds: [[0, 1, -1]]
     },
     'CaOH2': {
-        // Ca(OH)₂ — two OH groups at ~109°
+        ionicAtoms: { 0: 2, 1: -1, 3: -1 },
         atoms: [
             { type: 'Ca', pos: [0,    0,    0] },
             { type: 'O',  pos: [1.3,  0.6,  0] },
@@ -472,14 +475,14 @@ export const MOLECULES = {
             { type: 'O',  pos: [1.3, -0.6,  0] },
             { type: 'H',  pos: [1.8, -1.2,  0] }
         ],
-        bonds: [[0,1],[1,2],[0,3],[3,4]]
+        bonds: [[0,1,-1],[1,2],[0,3,-1],[3,4]]
     },
     'Al': {
         atoms: [{ type: 'Al', pos: [0, 0, 0] }],
         bonds: []
     },
     'Al2O3': {
-        // Two Al bridged by 3 O atoms — compact so two instances don't overlap
+        ionicAtoms: { 0: 3, 1: 3, 2: -2, 3: -2, 4: -2 },
         atoms: [
             { type: 'Al', pos: [-0.7,  0.6, 0] }, // Al1 — 0
             { type: 'Al', pos: [ 0.7,  0.6, 0] }, // Al2 — 1
@@ -487,7 +490,7 @@ export const MOLECULES = {
             { type: 'O',  pos: [ 0,   -0.2, 0] }, // O2 bridging — 3
             { type: 'O',  pos: [ 1.2, -0.2, 0] }, // O3  — 4
         ],
-        bonds: [[0,2],[0,3],[1,3],[1,4]]
+        bonds: [[0,2,-1],[0,3,-1],[1,3,-1],[1,4,-1]]
     },
     'CH3OH': {
         atoms: [
@@ -533,16 +536,16 @@ export const MOLECULES = {
         bonds: [[0, 1]]
     },
     'MgCl2': {
-        // Linear: Cl-Mg-Cl
+        ionicAtoms: { 0: -1, 1: 2, 2: -1 },
         atoms: [
             { type: 'Cl', pos: [-1.1, 0, 0] },
             { type: 'Mg', pos: [ 0,   0, 0] },
             { type: 'Cl', pos: [ 1.1, 0, 0] }
         ],
-        bonds: [[0,1],[1,2]]
+        bonds: [[0,1,-1],[1,2,-1]]
     },
     'CaCO3': {
-        // Ca²⁺ + CO₃²⁻ (trigonal planar CO3 group)
+        ionicAtoms: { 0: 2, 4: -2 },
         atoms: [
             { type: 'Ca', pos: [-1.5,  0,    0] }, // Ca — 0
             { type: 'C',  pos: [ 0.5,  0,    0] }, // C  — 1
@@ -550,7 +553,7 @@ export const MOLECULES = {
             { type: 'O',  pos: [ 1.2, -1.0,  0] }, // O  — 3
             { type: 'O',  pos: [-0.2,  0,    0] }, // O bridging — 4
         ],
-        bonds: [[0,4],[4,1],[1,2],[1,3]]
+        bonds: [[0,4,-1],[4,1],[1,2],[1,3]]
     }
 };
 
