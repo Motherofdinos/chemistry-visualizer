@@ -348,12 +348,22 @@ async function showPopup(formula, clientX, clientY) {
     const cid = PUBCHEM_CID[formula];
     if (cid) {
         try {
-            const res = await fetch(
-                `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${cid}/property/IUPACName,MolecularWeight/JSON`
-            );
-            const data = await res.json();
-            const props = data.PropertyTable.Properties[0];
-            document.getElementById('popup-extra').textContent = `IUPAC: ${props.IUPACName}`;
+            const base = `https://pubchem.ncbi.nlm.nih.gov/rest/pug`;
+            const view = `https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/${cid}/JSON`;
+            const [propsData, bpData, stateData] = await Promise.all([
+                fetch(`${base}/compound/cid/${cid}/property/IUPACName/JSON`).then(r => r.json()),
+                fetch(`${view}?heading=Boiling+Point`).then(r => r.json()).catch(() => null),
+                fetch(`${view}?heading=Physical+State`).then(r => r.json()).catch(() => null)
+            ]);
+
+            const iupac = propsData.PropertyTable.Properties[0].IUPACName;
+            const bp    = bpData?.Record?.Section?.[0]?.Information?.[0]?.Value?.StringWithMarkup?.[0]?.String ?? '—';
+            const state = stateData?.Record?.Section?.[0]?.Information?.[0]?.Value?.StringWithMarkup?.[0]?.String ?? '—';
+
+            document.getElementById('popup-extra').innerHTML =
+                `<b>IUPAC:</b> ${iupac}<br>` +
+                `<b>Т. кипіння:</b> ${bp}<br>` +
+                `<b>Стан (н.у.):</b> ${state}`;
         } catch {
             document.getElementById('popup-extra').textContent = '';
         }
