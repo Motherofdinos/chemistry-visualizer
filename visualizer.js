@@ -215,8 +215,10 @@ function setupAI() {
             if (err.message === 'NO_KEY' || err.message === 'BAD_KEY') {
                 textEl.textContent = '❌ Невірний API ключ. Натисни кнопку знову щоб ввести новий.';
                 localStorage.removeItem('gemini-api-key');
+            } else if (err.message === 'RATE_LIMIT') {
+                textEl.textContent = '⏳ Забагато запитів. Зачекай хвилину і спробуй ще раз.';
             } else {
-                textEl.textContent = `❌ Помилка: ${err.message}. Відкрий консоль браузера (F12) для деталей.`;
+                textEl.textContent = '❌ Помилка з\'єднання. Спробуй ще раз.';
             }
             textEl.className = 'ai-text';
         }

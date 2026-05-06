@@ -1,4 +1,4 @@
-const MODEL = 'gemini-2.0-flash-lite';
+const MODEL = 'gemini-1.5-flash';
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
 const DEFAULT_KEY = 'AIzaSyDLCNQUpRMBsdvYZqQuSWid6ePDnU-xPoU';
 
@@ -36,12 +36,10 @@ export async function explainReaction(title, equation) {
     });
 
     if (res.status === 400 || res.status === 403) throw new Error('BAD_KEY');
-    if (!res.ok) {
-        const errText = await res.text().catch(() => '');
-        console.error('Gemini API error', res.status, errText);
-        throw new Error('API_ERROR');
-    }
+    if (res.status === 429) throw new Error('RATE_LIMIT');
+    if (!res.ok) throw new Error('API_ERROR');
 
     const data = await res.json();
     return data.candidates?.[0]?.content?.parts?.[0]?.text ?? '—';
+
 }
