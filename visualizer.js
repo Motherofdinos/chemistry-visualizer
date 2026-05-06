@@ -197,12 +197,8 @@ function setupAI() {
         panel.style.display = 'block';
         resultEl.style.display = 'none';
 
-        if (!hasApiKey()) {
-            keyForm.style.display = 'block';
-        } else {
-            keyForm.style.display = 'none';
-            runExplain();
-        }
+        keyForm.style.display = 'none';
+        runExplain();
     });
 
     async function runExplain() {
@@ -215,11 +211,12 @@ function setupAI() {
             textEl.textContent = text;
             textEl.className = 'ai-text';
         } catch (err) {
+            console.error('AI explain error:', err);
             if (err.message === 'NO_KEY' || err.message === 'BAD_KEY') {
                 textEl.textContent = '❌ Невірний API ключ. Натисни кнопку знову щоб ввести новий.';
                 localStorage.removeItem('gemini-api-key');
             } else {
-                textEl.textContent = '❌ Помилка з\'єднання. Спробуй ще раз.';
+                textEl.textContent = `❌ Помилка: ${err.message}. Відкрий консоль браузера (F12) для деталей.`;
             }
             textEl.className = 'ai-text';
         }

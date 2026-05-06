@@ -1,8 +1,9 @@
-const MODEL = 'gemini-2.5-flash-lite-preview-06-17';
+const MODEL = 'gemini-2.0-flash-lite';
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
+const DEFAULT_KEY = 'AIzaSyDLCNQUpRMBsdvYZqQuSWid6ePDnU-xPoU';
 
 function getApiKey() {
-    return localStorage.getItem('gemini-api-key') ?? '';
+    return localStorage.getItem('gemini-api-key') || DEFAULT_KEY;
 }
 
 export function saveApiKey(key) {
@@ -10,7 +11,7 @@ export function saveApiKey(key) {
 }
 
 export function hasApiKey() {
-    return !!getApiKey();
+    return true;
 }
 
 export async function explainReaction(title, equation) {
@@ -34,8 +35,12 @@ export async function explainReaction(title, equation) {
         })
     });
 
-    if (res.status === 400) throw new Error('BAD_KEY');
-    if (!res.ok) throw new Error('API_ERROR');
+    if (res.status === 400 || res.status === 403) throw new Error('BAD_KEY');
+    if (!res.ok) {
+        const errText = await res.text().catch(() => '');
+        console.error('Gemini API error', res.status, errText);
+        throw new Error('API_ERROR');
+    }
 
     const data = await res.json();
     return data.candidates?.[0]?.content?.parts?.[0]?.text ?? '—';
