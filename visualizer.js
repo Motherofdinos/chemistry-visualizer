@@ -3,6 +3,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { TOPICS, MOLECULES, ATOMS, MOLECULE_INFO } from './reactions.js';
 import { THEMES } from './themes.js';
 import { animateAtoms } from './animator.js';
+import { explainReaction, hasApiKey, saveApiKey } from './gemini.js';
 
 let scene, camera, renderer, controls;
 let currentMolecules = new THREE.Group();
@@ -128,6 +129,11 @@ function setupUI() {
         const hasAnim = !!selectedReaction.atomMapping;
         animBtn.style.display = hasAnim ? 'block' : 'none';
         speedControl.style.display = hasAnim ? 'block' : 'none';
+
+        // Show AI button, reset panel
+        document.getElementById('ai-explain-btn').style.display = 'block';
+        document.getElementById('ai-panel').style.display = 'none';
+        document.getElementById('ai-result').style.display = 'none';
     });
 
     document.getElementById('show-reactants').addEventListener('click', () => {
@@ -159,6 +165,65 @@ function setupUI() {
     // Restore saved theme
     const saved = localStorage.getItem('chem-theme');
     if (saved && THEMES[saved]) applyTheme(saved);
+
+    setupAI();
+}
+
+function setupAI() {
+    const btn    = document.getElementById('ai-explain-btn');
+    const panel  = document.getElementById('ai-panel');
+    const keyForm  = document.getElementById('ai-key-form');
+    const resultEl = document.getElementById('ai-result');
+    const textEl   = document.getElementById('ai-text');
+    const keyInput = document.getElementById('ai-key-input');
+    const keySave  = document.getElementById('ai-key-save');
+    const closeBtn = document.getElementById('ai-close');
+
+    keySave.addEventListener('click', () => {
+        const val = keyInput.value.trim();
+        if (!val) return;
+        saveApiKey(val);
+        keyInput.value = '';
+        keyForm.style.display = 'none';
+        runExplain();
+    });
+
+    closeBtn.addEventListener('click', () => {
+        panel.style.display = 'none';
+        resultEl.style.display = 'none';
+    });
+
+    btn.addEventListener('click', () => {
+        panel.style.display = 'block';
+        resultEl.style.display = 'none';
+
+        if (!hasApiKey()) {
+            keyForm.style.display = 'block';
+        } else {
+            keyForm.style.display = 'none';
+            runExplain();
+        }
+    });
+
+    async function runExplain() {
+        resultEl.style.display = 'block';
+        textEl.textContent = '⏳ Генерую пояснення...';
+        textEl.className = 'ai-text ai-loading';
+
+        try {
+            const text = await explainReaction(selectedReaction.title, selectedReaction.equation);
+            textEl.textContent = text;
+            textEl.className = 'ai-text';
+        } catch (err) {
+            if (err.message === 'NO_KEY' || err.message === 'BAD_KEY') {
+                textEl.textContent = '❌ Невірний API ключ. Натисни кнопку знову щоб ввести новий.';
+                localStorage.removeItem('gemini-api-key');
+            } else {
+                textEl.textContent = '❌ Помилка з\'єднання. Спробуй ще раз.';
+            }
+            textEl.className = 'ai-text';
+        }
+    }
 }
 
 const ATOM_NAMES = {
@@ -228,9 +293,10 @@ function makeChargeSprite(charge) {
     ctx.fillText(text, 64, 64);
 
     const sprite = new THREE.Sprite(
-        new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(canvas), depthWrite: false })
+        new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(canvas), depthWrite: false, depthTest: false })
     );
-    sprite.scale.set(0.65, 0.65, 1);
+    sprite.scale.set(0.55, 0.55, 1);
+    sprite.renderOrder = 1;
     return sprite;
 }
 
@@ -296,7 +362,8 @@ function createMolecule(formula) {
             const sprite = makeChargeSprite(charge);
             const pos    = atomMeshes[parseInt(idx)].position;
             const r      = ATOMS[data.atoms[parseInt(idx)].type]?.radius ?? 0.5;
-            sprite.position.set(pos.x + r * 0.65, pos.y + r * 0.65, pos.z + r * 0.5);
+            sprite.position.set(pos.x, pos.y, pos.z);
+            sprite.scale.set(r * 1.4, r * 1.4, 1);
             group.add(sprite);
         });
     }

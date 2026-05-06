@@ -34,6 +34,23 @@
                 </div>
             </div>
 
+            <button id="ai-explain-btn" class="ai-btn" style="display:none">🤖 Пояснити реакцію</button>
+
+            <div id="ai-panel" class="ai-panel" style="display:none">
+                <div id="ai-key-form" style="display:none">
+                    <p class="ai-key-hint">Введи API ключ Gemini:</p>
+                    <input id="ai-key-input" type="password" placeholder="AIza..." class="ai-key-input">
+                    <button id="ai-key-save" class="ai-key-save-btn">Зберегти</button>
+                </div>
+                <div id="ai-result" style="display:none">
+                    <div class="ai-result-header">
+                        <span>🤖 Пояснення ШІ</span>
+                        <button id="ai-close" class="ai-close-btn">✕</button>
+                    </div>
+                    <p id="ai-text" class="ai-text"></p>
+                </div>
+            </div>
+
             <div id="atom-legend" class="atom-legend" style="display:none">
                 <span class="legend-title">Атоми в реакції:</span>
                 <div id="legend-items" class="legend-items"></div>
