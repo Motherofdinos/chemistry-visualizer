@@ -217,8 +217,10 @@ function setupAI() {
                 localStorage.removeItem('gemini-api-key');
             } else if (err.message === 'RATE_LIMIT') {
                 textEl.textContent = '⏳ Забагато запитів. Зачекай хвилину і спробуй ще раз.';
+            } else if (err.message === 'NETWORK') {
+                textEl.textContent = '❌ Помилка мережі (CORS?). Деталі в консолі F12.';
             } else {
-                textEl.textContent = '❌ Помилка з\'єднання. Спробуй ще раз.';
+                textEl.textContent = `❌ ${err.message}. Деталі в консолі F12.`;
             }
             textEl.className = 'ai-text';
         }

@@ -1,4 +1,4 @@
-const MODEL = 'gemini-1.5-flash';
+const MODEL = 'gemini-3.1-flash-lite-preview';
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
 const DEFAULT_KEY = 'AIzaSyDLCNQUpRMBsdvYZqQuSWid6ePDnU-xPoU';
 
@@ -26,20 +26,29 @@ export async function explainReaction(title, equation) {
         `3. Де зустрічається в житті (1–2 приклади)\n` +
         `Максимум 120 слів. Відповідай українською.`;
 
-    const res = await fetch(`${API_URL}?key=${key}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: { maxOutputTokens: 300, temperature: 0.7 }
-        })
-    });
+    let res;
+    try {
+        res = await fetch(`${API_URL}?key=${key}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: { maxOutputTokens: 300, temperature: 0.7 }
+            })
+        });
+    } catch (networkErr) {
+        console.error('Fetch failed (мережа/CORS):', networkErr);
+        throw new Error('NETWORK');
+    }
+
+    const body = await res.text();
+    console.log('Gemini status:', res.status);
+    console.log('Gemini body:', body.slice(0, 500));
 
     if (res.status === 400 || res.status === 403) throw new Error('BAD_KEY');
     if (res.status === 429) throw new Error('RATE_LIMIT');
-    if (!res.ok) throw new Error('API_ERROR');
+    if (!res.ok) throw new Error('API_ERROR ' + res.status);
 
-    const data = await res.json();
-    return data.candidates?.[0]?.content?.parts?.[0]?.text ?? '—';
+    return JSON.parse(body)?.candidates?.[0]?.content?.parts?.[0]?.text ?? '—';
 
 }
